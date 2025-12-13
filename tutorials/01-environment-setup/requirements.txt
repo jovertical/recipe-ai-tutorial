@@ -1,0 +1,21 @@
+# Core ML libraries
+torch>=2.0.0
+transformers>=4.36.0
+datasets>=2.14.0
+accelerate>=0.25.0
+peft>=0.7.0
+
+# Data handling
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Notebooks
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+
+# Utilities
+tqdm>=4.65.0
+python-dotenv>=1.0.0
+
+# Note: bitsandbytes is Linux/CUDA only
+# Install separately on cloud: pip install bitsandbytes
