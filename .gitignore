@@ -1,0 +1,30 @@
+# Data & Models (too large for git)
+data/*
+!data/.gitkeep
+!data/download.sh
+models/*
+!models/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# Secrets
+.env
+.env.local
