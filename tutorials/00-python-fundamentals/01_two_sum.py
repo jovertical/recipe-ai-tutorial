@@ -17,9 +17,15 @@
 
 
 def two_sum(nums: list[int], target: int) -> list[int]:
-    # Your solution here
-    pass
+    numMap = {}
 
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in numMap:
+            return [numMap[complement], i]
+        numMap[num] = i
+
+    return []
 
 # ----- Tests (do not modify) -----
 if __name__ == "__main__":
