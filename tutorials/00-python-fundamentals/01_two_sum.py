@@ -17,13 +17,13 @@
 
 
 def two_sum(nums: list[int], target: int) -> list[int]:
-    numMap = {}
+    num_map = {}
 
     for i, num in enumerate(nums):
         complement = target - num
-        if complement in numMap:
-            return [numMap[complement], i]
-        numMap[num] = i
+        if complement in num_map:
+            return [num_map[complement], i]
+        num_map[num] = i
 
     return []
 

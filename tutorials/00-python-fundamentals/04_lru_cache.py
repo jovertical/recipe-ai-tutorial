@@ -22,21 +22,37 @@
 # Understanding cache eviction helps with memory management.
 
 from collections import OrderedDict
-
+from typing import Any
 
 class LRUCache:
-    def __init__(self, capacity: int):
-        # Your solution here
-        pass
-    
-    def get(self, key: str):
-        # Your solution here
-        pass
-    
-    def put(self, key: str, value) -> None:
-        # Your solution here
-        pass
+    store: OrderedDict[str, Any]
+    capacity: int
 
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+
+        # Initialize the store using ordered dict so we can conditionally remove
+        # least accessed items from the store
+        self.store = OrderedDict()
+
+    def get(self, key: str) -> Any:
+        item = self.store.get(key)
+
+         # Push the item in the end so when max capacity is reached
+         # We can remove the first one in the store when putting a new item
+        if item is not None:
+            self.store.move_to_end(key)
+
+        return item
+
+    def put(self, key: str, value) -> None:
+        self.store[key] = value
+
+        # If we reach the capacity, we remove the first item from the store
+        # When popping an item, we should use FIFO since the latest is the most
+        # recent used cache item
+        if len(self.store.items()) > self.capacity:
+            self.store.popitem(False)
 
 # ----- Tests (do not modify) -----
 if __name__ == "__main__":
@@ -44,22 +60,23 @@ if __name__ == "__main__":
     cache = LRUCache(2)
     cache.put("a", 1)
     cache.put("b", 2)
+
     assert cache.get("a") == 1, "Test 1a failed"
     assert cache.get("b") == 2, "Test 1b failed"
-    
+
     # Test 2: Eviction
     cache.put("c", 3)  # Should evict "a" since "b" was accessed more recently
-    assert cache.get("a") == None, "Test 2a failed - a should be evicted"
+    assert cache.get("a") is None, "Test 2a failed - a should be evicted"
     assert cache.get("b") == 2, "Test 2b failed"
     assert cache.get("c") == 3, "Test 2c failed"
-    
+
     # Test 3: Update existing key
     cache = LRUCache(2)
     cache.put("a", 1)
     cache.put("b", 2)
     cache.put("a", 10)  # Update a
     assert cache.get("a") == 10, "Test 3 failed"
-    
+
     # Test 4: Access refreshes recency
     cache = LRUCache(2)
     cache.put("a", 1)
@@ -67,6 +84,6 @@ if __name__ == "__main__":
     cache.get("a")      # Access a, making it most recent
     cache.put("c", 3)   # Should evict b, not a
     assert cache.get("a") == 1, "Test 4a failed - a should still exist"
-    assert cache.get("b") == None, "Test 4b failed - b should be evicted"
-    
+    assert cache.get("b") is None, "Test 4b failed - b should be evicted"
+
     print("All tests passed!")

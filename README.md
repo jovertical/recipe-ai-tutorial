@@ -42,7 +42,7 @@ Build **Recipe AI** - an API platform for intelligent recipe generation, ingredi
 - [ ] 14 - API Design and Documentation
 - [ ] 15 - Dashboard (API keys, usage tracking)
 - [ ] 16 - Deployment and Scaling
-- [ ] 17 - Integrating with Misevente
+- [ ] 17 - Integrating with Real world apps
 
 ## Prerequisites
 
