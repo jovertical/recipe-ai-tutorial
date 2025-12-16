@@ -29,32 +29,53 @@ import re
 
 
 class SimpleTokenizer:
+    vocab: dict[str, int]
+    reverse_vocab: dict[int, str]
+
     def __init__(self):
-        # Your solution here
         # Reserve ID 0 for <UNK>
+        self.vocab = { '<UNK>': 0 }
+        self.reverse_vocab = { 0: '<UNK>' }
+
         pass
 
     def fit(self, texts: list[str]) -> None:
         """Build vocabulary from list of texts."""
-        # Your solution here
-        pass
+
+        # We expect the texts to be sentences so we loop through them
+        for text in texts:
+            # We then extract the words from the sentence (text in this case)
+            for word in self.__extract_words(text):
+                # We check if the "word" is not within our vocabulary
+                if word not in self.vocab:
+                    # This is a unique ID O(1)
+                    new_id = self.vocab_size
+
+                    self.vocab[word] = new_id
+                    self.reverse_vocab[new_id] = word
 
     def encode(self, text: str) -> list[int]:
         """Convert text to list of token IDs."""
-        # Your solution here
-        pass
+
+        # 1. Extract the words from the given text
+        # 2. Find the token ID from `vocab` mapping
+        # 3. Defaults to `{ <UNK>: 0 }` if the token ID is not found
+        return [self.vocab.get(word, 0) for word in self.__extract_words(text)]
 
     def decode(self, token_ids: list[int]) -> str:
         """Convert token IDs back to text."""
-        # Your solution here
-        pass
+
+        # 1. Extract the word from our reverse_vocab using the given token IDs
+        # 2. Build the text string by concatenating with a space (" ") between
+        return " ".join(self.reverse_vocab[token] for token in token_ids)
+
+    def __extract_words(self, text: str) -> list[str]:
+        return re.findall(r"[a-z]+|[.,!?;]", text.lower())
 
     @property
     def vocab_size(self) -> int:
         """Return size of vocabulary including <UNK>."""
-        # Your solution here
-        pass
-
+        return len(self.vocab.values())
 
 # ----- Tests (do not modify) -----
 if __name__ == "__main__":
