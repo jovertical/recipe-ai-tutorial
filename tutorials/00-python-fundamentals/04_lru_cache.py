@@ -48,6 +48,10 @@ class LRUCache:
     def put(self, key: str, value) -> None:
         self.store[key] = value
 
+        # Move the item to the end of the store, this will ensure that
+        # updating an item will make it the most recently used
+        self.store.move_to_end(key)
+
         # If we reach the capacity, we remove the first item from the store
         # When popping an item, we should use FIFO since the latest is the most
         # recent used cache item
@@ -85,5 +89,15 @@ if __name__ == "__main__":
     cache.put("c", 3)   # Should evict b, not a
     assert cache.get("a") == 1, "Test 4a failed - a should still exist"
     assert cache.get("b") is None, "Test 4b failed - b should be evicted"
+
+    # Test 5: Update refreshes recency
+    cache = LRUCache(2)
+    cache.put("a", 1)
+    cache.put("b", 2)
+    cache.put("a", 10)  # Update a, making it most recent
+    cache.put("c", 3)   # Should evict b, not a
+    assert cache.get("a") == 10, "Test 5a failed - a should still exist with updated value"
+    assert cache.get("b") is None, "Test 5b failed - b should be evicted"
+    assert cache.get("c") == 3, "Test 5c failed"
 
     print("All tests passed!")
