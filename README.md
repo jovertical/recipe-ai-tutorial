@@ -20,7 +20,7 @@ Build **Recipe AI** - an API platform for intelligent recipe generation, ingredi
 
 ### Part 1: Foundations
 - [x] 00 - Environment Setup (Python, CUDA, Hugging Face)
-- [ ] 01 - Python Fundamentals
+- [x] 01 - Python Fundamentals
 - [ ] 02 - Understanding Transformers and LLMs
 - [ ] 03 - Dataset Collection (RecipeNLG, Food.com)
 - [ ] 04 - Data Preprocessing and Exploration
