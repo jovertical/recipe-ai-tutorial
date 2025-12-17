@@ -50,6 +50,33 @@ Build **Recipe AI** - an API platform for intelligent recipe generation, ingredi
 - Some familiarity with APIs
 - Curiosity about how AI actually works
 
+## Getting Started
+
+### Install Dependencies
+
+```bash
+# Create and activate a virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install marimo for interactive tutorials
+pip install marimo
+```
+
+### Running Tutorials
+
+Tutorials use [marimo](https://marimo.io/) - a reactive Python notebook that runs as a `.py` file.
+
+```bash
+# Run a tutorial in your browser
+marimo run tutorials/02-understanding-transformers/01_transformers_intro.py
+
+# Or edit interactively
+marimo edit tutorials/02-understanding-transformers/01_transformers_intro.py
+```
+
+Marimo notebooks are pure Python files, so they work with version control, linters, and your favorite editor.
+
 ## Hardware Requirements
 
 - **For learning**: Google Colab Pro or Kaggle notebooks (free)
