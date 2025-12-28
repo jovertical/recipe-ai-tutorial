@@ -4,6 +4,12 @@ __generated_with = "0.17.6"
 app = marimo.App()
 
 
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -63,23 +69,24 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(mo):
     import os
     import json
     from pathlib import Path
 
-    # Create data directories
-    DATA_DIR = Path("../../data")
+    # Create data directories (relative to this notebook file)
+    NOTEBOOK_DIR = mo.notebook_dir()
+    DATA_DIR = (NOTEBOOK_DIR / "../../data").resolve()
     RAW_DIR = DATA_DIR / "raw"
     PROCESSED_DIR = DATA_DIR / "processed"
 
     for dir_path in [RAW_DIR, PROCESSED_DIR]:
         dir_path.mkdir(parents=True, exist_ok=True)
 
-    print(f"Data directory: {DATA_DIR.absolute()}")
-    print(f"Raw data: {RAW_DIR.absolute()}")
-    print(f"Processed data: {PROCESSED_DIR.absolute()}")
-    return DATA_DIR, RAW_DIR, PROCESSED_DIR, Path, os, json
+    print(f"Data directory: {DATA_DIR}")
+    print(f"Raw data: {RAW_DIR}")
+    print(f"Processed data: {PROCESSED_DIR}")
+    return DATA_DIR, RAW_DIR, json
 
 
 @app.cell
@@ -89,7 +96,7 @@ def _():
     from collections import Counter
 
     print("Libraries loaded successfully!")
-    return pd, np, Counter
+    return Counter, pd
 
 
 @app.cell(hide_code=True)
@@ -114,7 +121,7 @@ def _(mo):
 
 
 @app.cell
-def _(RAW_DIR, Path, json):
+def _(RAW_DIR, json):
     # Create sample RecipeNLG-style data for demonstration
     recipenlg_dir = RAW_DIR / "recipenlg"
     recipenlg_dir.mkdir(exist_ok=True)
@@ -240,12 +247,12 @@ def _(RAW_DIR, Path, json):
 
     # Save sample data
     sample_file = recipenlg_dir / "sample_recipes.json"
-    with open(sample_file, "w") as f:
-        json.dump(sample_recipes, f, indent=2)
+    with open(sample_file, "w") as _f:
+        json.dump(sample_recipes, _f, indent=2)
 
     print(f"Created sample dataset with {len(sample_recipes)} recipes")
     print(f"Saved to: {sample_file}")
-    return sample_recipes, recipenlg_dir, sample_file
+    return (sample_recipes,)
 
 
 @app.cell(hide_code=True)
@@ -268,7 +275,7 @@ def _(pd, sample_recipes):
     print("Dataset Shape:", df.shape)
     print("\nColumns:", df.columns.tolist())
     print("\nSample recipe:")
-    df.head(1)
+    df.head(2)
     return (df,)
 
 
@@ -298,7 +305,7 @@ def _(df):
     print(f"  Min: {title_lengths.min()}")
     print(f"  Max: {title_lengths.max()}")
     print(f"  Mean: {title_lengths.mean():.1f}")
-    return ingredient_counts, direction_counts, title_lengths
+    return
 
 
 @app.cell
@@ -313,7 +320,7 @@ def _(Counter, sample_recipes):
     print("-" * 30)
     for ingredient, count in ingredient_freq.most_common(10):
         print(f"  {ingredient}: {count}")
-    return all_ingredients, ingredient_freq
+    return
 
 
 @app.cell(hide_code=True)
@@ -399,11 +406,11 @@ def _(RAW_DIR, pd):
     print(f"Created sample Food.com dataset")
     print(f"\nColumns: {foodcom_recipes.columns.tolist()}")
     foodcom_recipes
-    return foodcom_dir, foodcom_recipes
+    return
 
 
 @app.cell
-def _(pd, RAW_DIR):
+def _(RAW_DIR, pd):
     # Create sample interactions data
     interactions = pd.DataFrame([
         {"user_id": 2001, "recipe_id": 1, "date": "2020-02-01", "rating": 5, "review": "Best cookies ever! My family loved them."},
@@ -417,7 +424,7 @@ def _(pd, RAW_DIR):
     interactions.to_csv(RAW_DIR / "foodcom" / "sample_interactions.csv", index=False)
     print("Sample interactions data:")
     interactions
-    return (interactions,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -501,18 +508,18 @@ def _(mo):
 def _(DATA_DIR):
     # Create a download helper script
     download_script = '''#!/usr/bin/env python3
-"""
-Dataset Download Helper for Recipe AI
+    """
+    Dataset Download Helper for Recipe AI
 
-This script helps download the required datasets.
-"""
+    This script helps download the required datasets.
+    """
 
-import os
-from pathlib import Path
+    import os
+    from pathlib import Path
 
-DATA_DIR = Path(__file__).parent
+    DATA_DIR = Path(__file__).parent
 
-def download_recipenlg():
+    def download_recipenlg():
     """Instructions for RecipeNLG dataset."""
     print("=" * 60)
     print("RecipeNLG Dataset")
@@ -527,7 +534,7 @@ def download_recipenlg():
     Records: 2.2 million recipes
     """)
 
-def download_foodcom():
+    def download_foodcom():
     """Instructions for Food.com dataset."""
     print("=" * 60)
     print("Food.com Dataset (Kaggle)")
@@ -547,21 +554,21 @@ def download_foodcom():
     - RAW_interactions.csv (~300MB)
     """)
 
-if __name__ == "__main__":
+    if __name__ == "__main__":
     print("Recipe AI Dataset Download Helper")
     print()
     download_recipenlg()
     print()
     download_foodcom()
-'''
+    '''
 
     script_path = DATA_DIR / "download_datasets.py"
-    with open(script_path, "w") as f:
-        f.write(download_script)
+    with open(script_path, "w") as _f:
+        _f.write(download_script)
 
     print(f"Created download helper: {script_path}")
     print("\nRun it with: python data/download_datasets.py")
-    return download_script, script_path
+    return
 
 
 @app.cell(hide_code=True)
@@ -613,12 +620,6 @@ def _(mo):
 def _():
     # Exercise space
     return
-
-
-@app.cell
-def _():
-    import marimo as mo
-    return (mo,)
 
 
 if __name__ == "__main__":

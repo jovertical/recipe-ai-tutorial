@@ -4,6 +4,12 @@ __generated_with = "0.17.6"
 app = marimo.App()
 
 
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -40,7 +46,7 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(mo):
     import json
     import re
     from pathlib import Path
@@ -49,8 +55,9 @@ def _():
     import pandas as pd
     import numpy as np
 
-    # Paths
-    DATA_DIR = Path("../../data")
+    # Paths (relative to this notebook file)
+    NOTEBOOK_DIR = mo.notebook_dir()
+    DATA_DIR = (NOTEBOOK_DIR / "../../data").resolve()
     RAW_DIR = DATA_DIR / "raw"
     PROCESSED_DIR = DATA_DIR / "processed"
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,7 +65,7 @@ def _():
     print("Libraries loaded!")
     print(f"Raw data: {RAW_DIR}")
     print(f"Processed data: {PROCESSED_DIR}")
-    return DATA_DIR, RAW_DIR, PROCESSED_DIR, Path, json, re, pd, np, Counter
+    return Counter, PROCESSED_DIR, RAW_DIR, json, np, re
 
 
 @app.cell(hide_code=True)
@@ -89,7 +96,7 @@ def _(RAW_DIR, json):
     if recipes_raw:
         print("\nFirst recipe:")
         print(json.dumps(recipes_raw[0], indent=2))
-    return recipes_raw, recipenlg_file
+    return (recipes_raw,)
 
 
 @app.cell(hide_code=True)
@@ -174,7 +181,7 @@ def _(re):
         print(f"  '{test}'")
         print(f"  → '{cleaned}'")
         print()
-    return clean_text, normalize_fractions, normalize_units, test_cases
+    return clean_text, normalize_fractions
 
 
 @app.cell(hide_code=True)
@@ -262,15 +269,15 @@ def _(re):
 
     print("Ingredient Parsing Examples:")
     print("-" * 60)
-    for ing in test_ingredients:
-        parsed = parse_ingredient(ing)
-        print(f"Input: {ing}")
+    for _ing in test_ingredients:
+        parsed = parse_ingredient(_ing)
+        print(f"Input: {_ing}")
         print(f"  Quantity: {parsed['quantity']}")
         print(f"  Unit: {parsed['unit']}")
         print(f"  Ingredient: {parsed['ingredient']}")
         print(f"  Preparation: {parsed['preparation']}")
         print()
-    return parse_ingredient, test_ingredients
+    return
 
 
 @app.cell(hide_code=True)
@@ -320,11 +327,11 @@ def _():
 
         response = f"""Recipe: {recipe['title']}
 
-Ingredients:
-{ingredients_text}
+    Ingredients:
+    {ingredients_text}
 
-Instructions:
-{directions_text}"""
+    Instructions:
+    {directions_text}"""
 
         return {
             "instruction": instruction,
@@ -345,11 +352,11 @@ Instructions:
 
         assistant_msg = f"""Here's how to make {recipe['title']}!
 
-You'll need: {ingredients_text}.
+    You'll need: {ingredients_text}.
 
-Start by: {directions_summary}
+    Start by: {directions_summary}
 
-Would you like the complete recipe with all ingredients and steps?"""
+    Would you like the complete recipe with all ingredients and steps?"""
 
         return {
             "user": user_msg,
@@ -364,22 +371,30 @@ Would you like the complete recipe with all ingredients and steps?"""
         directions_text = "\n".join(f"{i+1}. {step}" for i, step in enumerate(recipe['directions']))
 
         text = f"""<recipe>
-<title>{recipe['title']}</title>
-<ingredients>
-{ingredients_text}
-</ingredients>
-<instructions>
-{directions_text}
-</instructions>
-</recipe>"""
+    <title>{recipe['title']}</title>
+    <ingredients>
+    {ingredients_text}
+    </ingredients>
+    <instructions>
+    {directions_text}
+    </instructions>
+    </recipe>"""
 
         return {"structured_text": text}
-
-    return format_recipe_instruction, format_recipe_chat, format_recipe_structured
+    return (
+        format_recipe_chat,
+        format_recipe_instruction,
+        format_recipe_structured,
+    )
 
 
 @app.cell
-def _(recipes_raw, format_recipe_instruction, format_recipe_chat, format_recipe_structured):
+def _(
+    format_recipe_chat,
+    format_recipe_instruction,
+    format_recipe_structured,
+    recipes_raw,
+):
     # Demo the formats with first recipe
     if recipes_raw:
         sample = recipes_raw[0]
@@ -416,7 +431,7 @@ def _(mo):
 
 
 @app.cell
-def _(recipes_raw, clean_text, normalize_fractions, format_recipe_instruction):
+def _(clean_text, format_recipe_instruction, normalize_fractions, recipes_raw):
     def process_recipe(recipe):
         """Process a single recipe."""
         # Clean text fields
@@ -451,7 +466,7 @@ def _(recipes_raw, clean_text, normalize_fractions, format_recipe_instruction):
         print(f"  Title: {processed_recipes[0]['title']}")
         print(f"  Ingredients: {len(processed_recipes[0]['ingredients'])}")
         print(f"  Steps: {len(processed_recipes[0]['directions'])}")
-    return process_recipe, processed_recipes
+    return (processed_recipes,)
 
 
 @app.cell(hide_code=True)
@@ -501,7 +516,7 @@ def _(np, processed_recipes):
     print(f"  Training:   {len(train_recipes)} recipes ({len(train_recipes)/len(processed_recipes)*100:.1f}%)")
     print(f"  Validation: {len(val_recipes)} recipes ({len(val_recipes)/len(processed_recipes)*100:.1f}%)")
     print(f"  Test:       {len(test_recipes)} recipes ({len(test_recipes)/len(processed_recipes)*100:.1f}%)")
-    return split_dataset, train_recipes, val_recipes, test_recipes
+    return test_recipes, train_recipes, val_recipes
 
 
 @app.cell(hide_code=True)
@@ -516,7 +531,7 @@ def _(mo):
 
 
 @app.cell
-def _(PROCESSED_DIR, json, train_recipes, val_recipes, test_recipes):
+def _(PROCESSED_DIR, json, test_recipes, train_recipes, val_recipes):
     # Save as JSON
     def save_jsonl(data, filepath):
         """Save as JSON Lines format (one JSON object per line)."""
@@ -547,7 +562,7 @@ def _(PROCESSED_DIR, json, train_recipes, val_recipes, test_recipes):
     save_text_file(train_recipes, PROCESSED_DIR / "train_text.txt")
 
     print(f"\nAlso saved: {PROCESSED_DIR / 'train_text.txt'}")
-    return save_jsonl, save_text_file
+    return
 
 
 @app.cell(hide_code=True)
@@ -562,7 +577,7 @@ def _(mo):
 
 
 @app.cell
-def _(processed_recipes, Counter, np):
+def _(Counter, np, processed_recipes):
     # Compute statistics
     print("Dataset Statistics")
     print("=" * 50)
@@ -593,9 +608,9 @@ def _(processed_recipes, Counter, np):
 
     ner_counts = Counter(all_ner)
     print(f"\nMost common ingredients:")
-    for ing, count in ner_counts.most_common(10):
-        print(f"  {ing}: {count}")
-    return total_recipes, total_ingredients, total_steps, text_lengths, all_ner, ner_counts
+    for _ing, _count in ner_counts.most_common(10):
+        print(f"  {_ing}: {_count}")
+    return
 
 
 @app.cell(hide_code=True)
@@ -643,15 +658,9 @@ def _(mo):
 
 
 @app.cell
-def _():
-    # Exercise space
+def _(np, processed_recipes):
+    np.random.permutation(processed_recipes)
     return
-
-
-@app.cell
-def _():
-    import marimo as mo
-    return (mo,)
 
 
 if __name__ == "__main__":
