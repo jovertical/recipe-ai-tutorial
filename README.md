@@ -26,11 +26,11 @@ Build **Recipe AI** - an API platform for intelligent recipe generation, ingredi
 - [x] 04 - Data Preprocessing and Exploration
 
 ### Part 2: Training Custom Models
-- [ ] 05 - Tokenization Deep Dive
-- [ ] 06 - Fine-tuning with LoRA/QLoRA
-- [ ] 07 - Training Ingredient Embeddings
-- [ ] 08 - Building a Substitution Model
-- [ ] 09 - Evaluation and Iteration
+- [x] 05 - Tokenization Deep Dive (8 exercises)
+- [ ] 06 - Fine-tuning with LoRA (22 exercises) - *in progress*
+- [ ] 07 - Training Ingredient Embeddings (16 exercises)
+- [ ] 08 - Building a Substitution Model (19 exercises)
+- [ ] 09 - Evaluation and Iteration (22 exercises)
 
 ### Part 3: Serving and Infrastructure
 - [ ] 10 - Model Serving with vLLM/Ollama
