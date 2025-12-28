@@ -1,332 +1,101 @@
-"""
-Exercise 02: Dense Embeddings
-
-In this exercise, you'll implement a simple embedding layer from scratch.
-An embedding layer is just a learned lookup table: each word gets a dense
-vector that is learned during training.
-
-Example:
-    # Vocabulary: {"apple": 0, "banana": 1, "cherry": 2}
-    # Embedding dimension: 4
-    
-    embedding_matrix = [
-        [0.2, -0.1, 0.5, 0.3],   # apple
-        [-0.4, 0.6, 0.1, -0.2],  # banana  
-        [0.1, 0.3, -0.5, 0.4]    # cherry
-    ]
-    
-    embed("apple") = [0.2, -0.1, 0.5, 0.3]  # Just lookup row 0
-
-ML Relevance:
-    Embeddings are fundamental to NLP:
-    - Dense vectors (50-1000 dims) instead of sparse one-hot (50,000+ dims)
-    - Similar words have similar vectors
-    - Learned end-to-end with the model
-    - Transfer learning: pretrained embeddings capture world knowledge
-
-Your Task:
-    1. Implement EmbeddingLayer class with random initialization
-    2. Implement forward() - look up embeddings by index
-    3. Implement embed_words() - embed a list of words
-    4. Understand how gradients flow through embeddings
-
-Run:
-    python tutorials/07-embeddings/02_dense_embeddings.py
-"""
+# Problem 2: Dense Embeddings
+#
+# Implement a simple embedding layer from scratch. An embedding layer is just
+# a learned lookup table: each word gets a dense vector learned during training.
+#
+# You'll implement:
+# 1. EmbeddingLayer class with random initialization
+# 2. forward() - look up embeddings by index
+# 3. embed_words() - embed a list of words
+# 4. Utility functions for similarity and statistics
+#
+# Example:
+#   # Vocabulary: {"apple": 0, "banana": 1, "cherry": 2}
+#   # Embedding dimension: 4
+#   embedding_matrix = [
+#       [0.2, -0.1, 0.5, 0.3],   # apple
+#       [-0.4, 0.6, 0.1, -0.2],  # banana
+#       [0.1, 0.3, -0.5, 0.4]    # cherry
+#   ]
+#   embed("apple") = [0.2, -0.1, 0.5, 0.3]  # Just lookup row 0
+#
+# Constraints:
+#   - Initialize with small random values (randn * 0.02)
+#   - Support padding_idx for zero embeddings
+#   - Handle out-of-vocabulary words with zero/unk/random options
+#
+# ML Relevance: Embeddings are fundamental to NLP: dense vectors (50-1000 dims)
+# instead of sparse one-hot (50,000+ dims), similar words have similar vectors,
+# learned end-to-end with the model, and enable transfer learning.
 
 from typing import List, Dict, Union
 import numpy as np
 
 
 class EmbeddingLayer:
-    """
-    A simple embedding layer (lookup table).
+    """A simple embedding layer (lookup table)."""
     
-    Attributes:
-        num_embeddings: Size of vocabulary
-        embedding_dim: Dimension of each embedding vector
-        weight: The embedding matrix (num_embeddings, embedding_dim)
-    
-    Example:
-        >>> emb = EmbeddingLayer(num_embeddings=1000, embedding_dim=64)
-        >>> emb.weight.shape
-        (1000, 64)
-        >>> emb(np.array([0, 5, 10])).shape
-        (3, 64)
-    """
-    
-    def __init__(
-        self,
-        num_embeddings: int,
-        embedding_dim: int,
-        padding_idx: int = None
-    ):
-        """
-        Initialize the embedding layer.
-        
-        Args:
-            num_embeddings: Size of the vocabulary
-            embedding_dim: Dimension of embedding vectors
-            padding_idx: If set, embeddings at this index are zeros
-        """
+    def __init__(self, num_embeddings: int, embedding_dim: int, padding_idx: int = None):
+        """Initialize with random weights, optionally zeroing padding_idx."""
         # Your solution here
-        # Hints:
-        # 1. Store the parameters
-        # 2. Initialize weight matrix with small random values
-        #    Use np.random.randn() * 0.02 (typical initialization)
-        # 3. If padding_idx is set, set that row to zeros
         pass
     
     def __call__(self, indices: np.ndarray) -> np.ndarray:
-        """
-        Look up embeddings for given indices.
-        
-        Args:
-            indices: Integer array of any shape
-            
-        Returns:
-            Embeddings with shape (*indices.shape, embedding_dim)
-            
-        Example:
-            >>> emb = EmbeddingLayer(100, 64)
-            >>> emb(np.array([1, 2, 3])).shape
-            (3, 64)
-            >>> emb(np.array([[1, 2], [3, 4]])).shape
-            (2, 2, 64)
-        """
+        """Look up embeddings for given indices."""
         # Your solution here
-        # Hint: NumPy fancy indexing makes this one line!
         pass
     
-    def embed_words(
-        self,
-        words: List[str],
-        vocab: Dict[str, int],
-        handle_oov: str = "zero"
-    ) -> np.ndarray:
-        """
-        Embed a list of words using vocabulary.
-        
-        Args:
-            words: List of words to embed
-            vocab: Word to index mapping
-            handle_oov: How to handle out-of-vocabulary words
-                       "zero" -> return zero vector
-                       "unk" -> use [UNK] token (must be in vocab)
-                       "random" -> return random vector
-                       
-        Returns:
-            Embeddings of shape (len(words), embedding_dim)
-            
-        Example:
-            >>> vocab = {"[UNK]": 0, "hello": 1, "world": 2}
-            >>> emb = EmbeddingLayer(3, 64)
-            >>> emb.embed_words(["hello", "unknown"], vocab, handle_oov="unk")
-            # Returns embeddings for indices [1, 0]
-        """
+    def embed_words(self, words: List[str], vocab: Dict[str, int], handle_oov: str = "zero") -> np.ndarray:
+        """Embed a list of words. handle_oov: 'zero', 'unk', or 'random'."""
         # Your solution here
         pass
 
 
-def initialize_embeddings(
-    num_embeddings: int,
-    embedding_dim: int,
-    init_type: str = "normal"
-) -> np.ndarray:
-    """
-    Initialize embedding weights with different strategies.
-    
-    Args:
-        num_embeddings: Vocabulary size
-        embedding_dim: Embedding dimension
-        init_type: Initialization type
-            "normal" -> N(0, 0.02)
-            "uniform" -> U(-0.1, 0.1)
-            "xavier" -> Xavier/Glorot initialization
-            
-    Returns:
-        Initialized embedding matrix
-        
-    Example:
-        >>> weights = initialize_embeddings(1000, 64, "xavier")
-        >>> weights.shape
-        (1000, 64)
-        >>> abs(weights.mean()) < 0.01  # Should be centered
-        True
-    """
-    # Your solution here
-    # Hints:
-    # - normal: np.random.randn() * 0.02
-    # - uniform: np.random.uniform(-0.1, 0.1)
-    # - xavier: np.random.randn() * sqrt(2 / (fan_in + fan_out))
-    pass
-
-
-def embedding_similarity(
-    word1: str,
-    word2: str,
-    embedding_layer: EmbeddingLayer,
-    vocab: Dict[str, int]
-) -> float:
-    """
-    Calculate cosine similarity between word embeddings.
-    
-    Args:
-        word1: First word
-        word2: Second word
-        embedding_layer: The embedding layer
-        vocab: Word to index mapping
-        
-    Returns:
-        Cosine similarity between -1 and 1
-        
-    Example:
-        >>> sim = embedding_similarity("king", "queen", emb, vocab)
-        >>> sim > 0.5  # Should be high for related words (after training)
-        True
-    """
+def initialize_embeddings(num_embeddings: int, embedding_dim: int, init_type: str = "normal") -> np.ndarray:
+    """Initialize embeddings: 'normal', 'uniform', or 'xavier'."""
     # Your solution here
     pass
 
 
-def find_nearest_neighbors(
-    word: str,
-    embedding_layer: EmbeddingLayer,
-    vocab: Dict[str, int],
-    top_k: int = 5
-) -> List[tuple]:
-    """
-    Find most similar words to a given word.
-    
-    Args:
-        word: Query word
-        embedding_layer: The embedding layer
-        vocab: Word to index mapping
-        top_k: Number of neighbors to return
-        
-    Returns:
-        List of (word, similarity) tuples, sorted by similarity
-        
-    Example:
-        >>> neighbors = find_nearest_neighbors("king", emb, vocab, top_k=5)
-        >>> neighbors[0]
-        ('king', 1.0)  # Most similar is itself
-        >>> neighbors[1][0]  # Second most similar
-        'queen'  # (after training on appropriate data)
-    """
-    # Your solution here
-    # Hints:
-    # 1. Get embedding for query word
-    # 2. Compute similarity with all embeddings
-    # 3. Sort and return top k
-    pass
-
-
-def compute_embedding_statistics(
-    embedding_layer: EmbeddingLayer
-) -> Dict[str, float]:
-    """
-    Compute statistics about embedding weights.
-    
-    Args:
-        embedding_layer: The embedding layer
-        
-    Returns:
-        Dictionary with statistics:
-        - mean: Mean of all weights
-        - std: Standard deviation
-        - min: Minimum value
-        - max: Maximum value
-        - norm_mean: Mean L2 norm of embeddings
-        
-    Example:
-        >>> stats = compute_embedding_statistics(emb)
-        >>> abs(stats["mean"]) < 0.1  # Should be near zero
-        True
-    """
+def embedding_similarity(word1: str, word2: str, embedding_layer: EmbeddingLayer, vocab: Dict[str, int]) -> float:
+    """Calculate cosine similarity between word embeddings."""
     # Your solution here
     pass
 
 
-def average_embeddings(
-    words: List[str],
-    embedding_layer: EmbeddingLayer,
-    vocab: Dict[str, int]
-) -> np.ndarray:
-    """
-    Compute average embedding for a list of words.
-    
-    This is a simple way to get sentence/phrase embeddings.
-    
-    Args:
-        words: List of words
-        embedding_layer: The embedding layer
-        vocab: Word to index mapping
-        
-    Returns:
-        Average embedding vector
-        
-    Example:
-        >>> avg = average_embeddings(["hello", "world"], emb, vocab)
-        >>> avg.shape
-        (64,)  # Same as embedding_dim
-    """
+def find_nearest_neighbors(word: str, embedding_layer: EmbeddingLayer, vocab: Dict[str, int], top_k: int = 5) -> List[tuple]:
+    """Find most similar words to a given word."""
+    # Your solution here
+    pass
+
+
+def compute_embedding_statistics(embedding_layer: EmbeddingLayer) -> Dict[str, float]:
+    """Compute statistics: mean, std, min, max, norm_mean."""
+    # Your solution here
+    pass
+
+
+def average_embeddings(words: List[str], embedding_layer: EmbeddingLayer, vocab: Dict[str, int]) -> np.ndarray:
+    """Compute average embedding for a list of words."""
     # Your solution here
     pass
 
 
 class EmbeddingWithDropout(EmbeddingLayer):
-    """
-    Embedding layer with dropout for regularization.
+    """Embedding layer with dropout for regularization."""
     
-    Dropout randomly zeros out entire embeddings during training.
-    """
-    
-    def __init__(
-        self,
-        num_embeddings: int,
-        embedding_dim: int,
-        dropout_prob: float = 0.1,
-        padding_idx: int = None
-    ):
-        """
-        Initialize embedding with dropout.
-        
-        Args:
-            num_embeddings: Vocabulary size
-            embedding_dim: Embedding dimension
-            dropout_prob: Probability of dropping an embedding
-            padding_idx: Index for padding token
-        """
+    def __init__(self, num_embeddings: int, embedding_dim: int, dropout_prob: float = 0.1, padding_idx: int = None):
+        """Initialize embedding with dropout."""
         # Your solution here
-        # Hint: Call parent __init__ and store dropout_prob
         pass
     
-    def __call__(
-        self,
-        indices: np.ndarray,
-        training: bool = True
-    ) -> np.ndarray:
-        """
-        Look up embeddings with optional dropout.
-        
-        Args:
-            indices: Integer indices to look up
-            training: Whether in training mode (apply dropout)
-            
-        Returns:
-            Embeddings, possibly with some dropped to zero
-        """
+    def __call__(self, indices: np.ndarray, training: bool = True) -> np.ndarray:
+        """Look up embeddings with optional dropout during training."""
         # Your solution here
-        # Hints:
-        # 1. Get base embeddings
-        # 2. If training, randomly zero some out
-        # 3. Scale remaining by 1/(1-p) to maintain expected value
         pass
 
 
-# ----- Tests (do not modify below this line) -----
-
+# ----- Tests (do not modify) -----
 if __name__ == "__main__":
     np.random.seed(42)
     
@@ -458,7 +227,6 @@ if __name__ == "__main__":
     
     # Test 18: No dropout in eval
     result_eval = emb_drop(np.array([1, 2, 3, 4, 5]), training=False)
-    # In eval mode, should match base embeddings
     for i, idx in enumerate([1, 2, 3, 4, 5]):
         assert np.allclose(result_eval[i], emb_drop.weight[idx]), f"Test 18 failed at {i}"
     print("  ✓ Dropout respects training mode")
@@ -466,8 +234,3 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("All tests passed!")
     print("="*50)
-    print("\nKey takeaways:")
-    print("- Embeddings are just learned lookup tables")
-    print("- Each word gets a dense vector (vs sparse one-hot)")
-    print("- Similarity can be computed with cosine similarity")
-    print("- Dropout helps regularization during training")

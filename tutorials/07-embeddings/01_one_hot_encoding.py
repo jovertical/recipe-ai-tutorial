@@ -1,168 +1,61 @@
-"""
-Exercise 01: One-Hot Encoding
-
-In this exercise, you'll implement one-hot encoding from scratch to understand
-what embeddings replace. One-hot encoding represents each word as a sparse
-vector with a single 1 and all other positions as 0.
-
-Example:
-    vocabulary = ["apple", "banana", "cherry"]
-    
-    one_hot("apple")  = [1, 0, 0]
-    one_hot("banana") = [0, 1, 0]
-    one_hot("cherry") = [0, 0, 1]
-
-ML Relevance:
-    One-hot encoding was the standard before embeddings. It has problems:
-    - High dimensionality: vocab_size can be 50,000+
-    - No semantic similarity: similar words are equally distant
-    - Sparse vectors: wasteful memory and computation
-    
-    Embeddings solve these by learning dense, semantic representations.
-
-Your Task:
-    1. Implement create_vocabulary() - build word to index mapping
-    2. Implement one_hot_encode() - encode a single word
-    3. Implement one_hot_encode_sequence() - encode multiple words
-    4. Implement one_hot_similarity() - show why one-hot fails for similarity
-
-Run:
-    python tutorials/07-embeddings/01_one_hot_encoding.py
-"""
+# Problem 1: One-Hot Encoding
+#
+# Implement one-hot encoding from scratch to understand what embeddings replace.
+# One-hot encoding represents each word as a sparse vector with a single 1
+# and all other positions as 0.
+#
+# You'll implement:
+# 1. create_vocabulary() - build word to index mapping
+# 2. one_hot_encode() - encode a single word
+# 3. one_hot_encode_sequence() - encode multiple words
+# 4. one_hot_similarity() - show why one-hot fails for similarity
+#
+# Example:
+#   vocabulary = ["apple", "banana", "cherry"]
+#   one_hot("apple")  = [1, 0, 0]
+#   one_hot("banana") = [0, 1, 0]
+#   one_hot("cherry") = [0, 0, 1]
+#
+# Constraints:
+#   - Include [PAD] (index 0) and [UNK] (index 1) special tokens
+#   - Handle unknown words by mapping to [UNK]
+#   - Vocabulary should be sorted for reproducibility
+#
+# ML Relevance: One-hot encoding was the standard before embeddings. It has
+# problems: high dimensionality (vocab_size can be 50,000+), no semantic
+# similarity (similar words are equally distant), and sparse vectors (wasteful
+# memory). Embeddings solve these with dense, learned representations.
 
 from typing import List, Dict, Tuple
 import numpy as np
 
 
 def create_vocabulary(words: List[str], add_special_tokens: bool = True) -> Dict[str, int]:
-    """
-    Create a vocabulary mapping from words to indices.
-    
-    Args:
-        words: List of words to include in vocabulary
-        add_special_tokens: Whether to add [UNK] and [PAD] tokens
-        
-    Returns:
-        Dictionary mapping word -> index
-        
-    Example:
-        >>> vocab = create_vocabulary(["apple", "banana"])
-        >>> vocab["apple"]
-        2  # After [PAD]=0, [UNK]=1
-        >>> vocab["banana"]
-        3
-    """
+    """Create a vocabulary mapping from words to indices."""
     # Your solution here
-    # Hints:
-    # 1. If add_special_tokens, start with [PAD] -> 0, [UNK] -> 1
-    # 2. Add each unique word with incrementing index
-    # 3. Use set() to get unique words, then sort for reproducibility
     pass
 
 
 def one_hot_encode(word: str, vocabulary: Dict[str, int]) -> np.ndarray:
-    """
-    Create one-hot encoding for a single word.
-    
-    Args:
-        word: Word to encode
-        vocabulary: Word to index mapping
-        
-    Returns:
-        One-hot vector of length vocab_size
-        
-    Example:
-        >>> vocab = {"[PAD]": 0, "[UNK]": 1, "apple": 2, "banana": 3}
-        >>> one_hot_encode("apple", vocab)
-        array([0., 0., 1., 0.])
-        >>> one_hot_encode("unknown", vocab)  # Returns UNK
-        array([0., 1., 0., 0.])
-    """
-    # Your solution here
-    # Hints:
-    # 1. Create zero vector of vocab_size
-    # 2. Get index for word (use [UNK] if not found)
-    # 3. Set that position to 1
-    pass
-
-
-def one_hot_encode_sequence(
-    words: List[str],
-    vocabulary: Dict[str, int]
-) -> np.ndarray:
-    """
-    Create one-hot encodings for a sequence of words.
-    
-    Args:
-        words: List of words to encode
-        vocabulary: Word to index mapping
-        
-    Returns:
-        2D array of shape (num_words, vocab_size)
-        
-    Example:
-        >>> vocab = {"[PAD]": 0, "[UNK]": 1, "hello": 2, "world": 3}
-        >>> encodings = one_hot_encode_sequence(["hello", "world"], vocab)
-        >>> encodings.shape
-        (2, 4)
-    """
+    """Create one-hot encoding for a single word."""
     # Your solution here
     pass
 
 
-def one_hot_similarity(
-    word1: str,
-    word2: str,
-    vocabulary: Dict[str, int]
-) -> float:
-    """
-    Calculate cosine similarity between one-hot encodings.
-    
-    This demonstrates why one-hot encoding fails for semantic similarity.
-    
-    Args:
-        word1: First word
-        word2: Second word
-        vocabulary: Word to index mapping
-        
-    Returns:
-        Cosine similarity (0 if different words, 1 if same word)
-        
-    Example:
-        >>> vocab = create_vocabulary(["cat", "dog", "car"])
-        >>> one_hot_similarity("cat", "dog", vocab)  # Similar animals
-        0.0  # But one-hot sees them as completely different!
-        >>> one_hot_similarity("cat", "car", vocab)  # Very different
-        0.0  # Same distance as cat-dog
-    """
+def one_hot_encode_sequence(words: List[str], vocabulary: Dict[str, int]) -> np.ndarray:
+    """Create one-hot encodings for a sequence of words."""
     # Your solution here
-    # Hints:
-    # 1. Get one-hot encodings for both words
-    # 2. Calculate cosine similarity: dot(a, b) / (norm(a) * norm(b))
+    pass
+
+
+def one_hot_similarity(word1: str, word2: str, vocabulary: Dict[str, int]) -> float:
+    """Calculate cosine similarity between one-hot encodings."""
+    # Your solution here
     pass
 
 
 def analyze_one_hot_problems(vocabulary: Dict[str, int]) -> Dict[str, any]:
-    """
-    Analyze problems with one-hot encoding.
-    
-    Args:
-        vocabulary: Word to index mapping
-        
-    Returns:
-        Dictionary with analysis:
-        - vocab_size: Number of words
-        - memory_per_word_bytes: Memory for one encoding (float32)
-        - sparsity: Fraction of zeros in encoding
-        - total_pairs: Number of word pairs
-        - same_similarity_pairs: All pairs have same similarity
-        
-    Example:
-        >>> vocab = create_vocabulary(["the", "a", "cat", "dog", "runs"])
-        >>> analysis = analyze_one_hot_problems(vocab)
-        >>> analysis["sparsity"] > 0.99  # Almost all zeros
-        True
-    """
+    """Analyze problems with one-hot encoding (vocab_size, sparsity, etc.)."""
     # Your solution here
     pass
 
@@ -172,58 +65,18 @@ def compare_representations(
     vocabulary: Dict[str, int],
     embeddings: Dict[str, np.ndarray] = None
 ) -> Dict[str, List[float]]:
-    """
-    Compare one-hot vs embedding similarities for word pairs.
-    
-    Args:
-        word_pairs: List of (word1, word2) tuples
-        vocabulary: Word to index mapping
-        embeddings: Optional pretrained embeddings (word -> vector)
-        
-    Returns:
-        Dictionary with:
-        - one_hot_similarities: List of one-hot similarities
-        - embedding_similarities: List of embedding similarities (if provided)
-        
-    Example:
-        >>> pairs = [("cat", "dog"), ("cat", "car"), ("dog", "puppy")]
-        >>> result = compare_representations(pairs, vocab, embeddings)
-        >>> result["one_hot_similarities"]
-        [0.0, 0.0, 0.0]  # All same!
-        >>> result["embedding_similarities"]
-        [0.8, 0.2, 0.9]  # Captures semantic similarity
-    """
+    """Compare one-hot vs embedding similarities for word pairs."""
     # Your solution here
     pass
 
 
 def create_mock_embeddings(vocabulary: Dict[str, int], dim: int = 50) -> Dict[str, np.ndarray]:
-    """
-    Create mock embeddings with some semantic structure.
-    
-    This is for testing - real embeddings come from training.
-    Similar words will have similar vectors.
-    
-    Args:
-        vocabulary: Word to index mapping
-        dim: Embedding dimension
-        
-    Returns:
-        Dictionary mapping word -> embedding vector
-        
-    Example:
-        >>> embeddings = create_mock_embeddings(vocab, dim=50)
-        >>> embeddings["cat"].shape
-        (50,)
-    """
+    """Create mock embeddings with random vectors for testing."""
     # Your solution here
-    # Create random embeddings, but make similar words closer
-    # For simplicity, just create random vectors
     pass
 
 
-# ----- Tests (do not modify below this line) -----
-
+# ----- Tests (do not modify) -----
 if __name__ == "__main__":
     print("Testing create_vocabulary...")
     
@@ -244,7 +97,7 @@ if __name__ == "__main__":
     
     # Test 3: Duplicate words
     vocab = create_vocabulary(["a", "b", "a", "b", "c"])
-    assert len(vocab) == 5, f"Test 3 failed: duplicates not handled {len(vocab)}"  # PAD, UNK, a, b, c
+    assert len(vocab) == 5, f"Test 3 failed: duplicates not handled {len(vocab)}"
     print("  ✓ Duplicates handled")
     
     print("\nTesting one_hot_encode...")
@@ -286,8 +139,8 @@ if __name__ == "__main__":
     print("  ✓ Different word similarity = 0.0")
     
     # Test 9: Semantic similarity problem
-    sim_cat_dog = one_hot_similarity("cat", "dog", vocab)  # Similar concepts
-    sim_cat_car = one_hot_similarity("cat", "car", vocab)  # Different concepts
+    sim_cat_dog = one_hot_similarity("cat", "dog", vocab)
+    sim_cat_car = one_hot_similarity("cat", "car", vocab)
     assert sim_cat_dog == sim_cat_car, "Test 9 failed: one-hot can't distinguish semantic similarity"
     print("  ✓ One-hot fails to capture semantic similarity (as expected)")
     
@@ -333,8 +186,3 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("All tests passed!")
     print("="*50)
-    print("\nYou've learned why one-hot encoding has limitations:")
-    print("1. Sparse vectors (mostly zeros)")
-    print("2. High memory usage (vocab_size dimensions)")
-    print("3. No semantic similarity (all different words equally distant)")
-    print("\nEmbeddings solve these problems with dense, learned representations!")

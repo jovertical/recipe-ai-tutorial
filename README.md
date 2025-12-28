@@ -20,14 +20,14 @@ Build **Recipe AI** - an API platform for intelligent recipe generation, ingredi
 
 ### Part 1: Foundations
 - [x] 00 - Environment Setup (Python, CUDA, Hugging Face)
-- [x] 01 - Python Fundamentals
+- [x] 01 - Python Fundamentals (8 exercises)
 - [x] 02 - Understanding Transformers and LLMs
 - [x] 03 - Dataset Collection (RecipeNLG, Food.com)
 - [x] 04 - Data Preprocessing and Exploration
 
 ### Part 2: Training Custom Models
-- [x] 05 - Tokenization Deep Dive (8 exercises)
-- [ ] 06 - Fine-tuning with LoRA (22 exercises) - *in progress*
+- [ ] 05 - Tokenization Deep Dive (8 exercises)
+- [ ] 06 - Fine-tuning with LoRA (22 exercises)
 - [ ] 07 - Training Ingredient Embeddings (16 exercises)
 - [ ] 08 - Building a Substitution Model (19 exercises)
 - [ ] 09 - Evaluation and Iteration (22 exercises)
